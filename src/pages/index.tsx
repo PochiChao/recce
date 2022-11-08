@@ -6,6 +6,7 @@ import {signIn, useSession} from "next-auth/react";
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import Head from "next/head";
 import axios from "axios";
+import getImages from "./api/get-images";
 
 // let user = {
 //   name: "Pochi Chao",
@@ -51,38 +52,7 @@ const mediaTypes = [
   },
 ]
 
-const recBoxes = [
-  {
-    id: 1,
-    title: '',
-    creator: '',
-    href: '#',
-    imageSrc: '',
-    imageAlt: "Recommendation No.1 Picture",
-    year: '',
-    description: '',
-  },
-  {
-    id: 2,
-    title: '',
-    creator: '',
-    href: '#',
-    imageSrc: '',
-    imageAlt: "Recommendation No.2 Picture",
-    year: '',
-    description: '',
-  },
-  {
-    id: 3,
-    title: '',
-    creator: '',
-    href: '#',
-    imageSrc: '',
-    imageAlt: "Recommendation No.3 Picture",
-    year: '',
-    description: '',
-  },
-]
+
 
 function classNames(...classes: string[]) {
   return classes.filter(item => Boolean(item)).join("")
@@ -90,8 +60,39 @@ function classNames(...classes: string[]) {
 
 const Home: NextPage = () => {
   const [open, setOpen] = useState(true);
-  const [result, setResult] = useState(["","",""]);
   const {data, status} = useSession();
+  const [recBoxes, setRecBoxes] = useState([
+    {
+      id: 1,
+      title: '',
+      creator: '',
+      href: '#',
+      imageSrc: '',
+      imageAlt: "Recommendation No.1 Picture",
+      year: '',
+      description: '',
+    },
+    {
+      id: 2,
+      title: '',
+      creator: '',
+      href: '#',
+      imageSrc: '',
+      imageAlt: "Recommendation No.2 Picture",
+      year: '',
+      description: '',
+    },
+    {
+      id: 3,
+      title: '',
+      creator: '',
+      href: '#',
+      imageSrc: '',
+      imageAlt: "Recommendation No.3 Picture",
+      year: '',
+      description: '',
+    },
+  ]);
   
   const [selected, setSelected] = useState(mediaTypes[0]!);
   const [recomRefine, setRecomRefine] = useState({
@@ -99,7 +100,7 @@ const Home: NextPage = () => {
     refinement: " ",
   });
   const [resultsLoaded, setResultsLoaded] = useState(false);
-  const [imageRecs, setImageRecs] = useState();
+  const [imageRecs, setImageRecs] = useState<any>();
 
 
   function handleChange(event: { target: { name: any; value: any; }; }){
@@ -113,38 +114,62 @@ const Home: NextPage = () => {
   }
 
   async function handleClick(event: React.MouseEvent<HTMLElement>){
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ selected, recomRefine }),
-    });
-    const data = await response.json();
-    let result1 = data.result.substring((data.result.indexOf("1.")+3), (data.result.indexOf("2.")));
-    let result2 = data.result.substring((data.result.indexOf("2."))+3,(data.result.indexOf("3.")));
-    let result3 = data.result.substring((data.result.indexOf("3.")+3));
-    let result1Arr = result1.split(" | ");
-    let result2Arr = result2.split(" | ");
-    let result3Arr = result3.split(" | ");
-    let resultArr = [result1Arr, result2Arr, result3Arr];
-    
-    for (let i = 0; i < 3; i++){
-        recBoxes[i]!.title = resultArr[i][0];
-        recBoxes[i]!.creator = resultArr[i][1];
-        recBoxes[i]!.year = resultArr[i][2];
-        recBoxes[i]!.description = resultArr[i][3];
-    }
-
-    setResult(resultArr);
-    setResultsLoaded(true);
-
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ selected, recomRefine }),
+      });
+      const data = await response.json();
+      
+      let result1Arr = data.result.substring((data.result.indexOf("1.")+3), (data.result.indexOf("2."))).split(" | ");
+      let result2Arr = data.result.substring((data.result.indexOf("2."))+3,(data.result.indexOf("3."))).split(" | ");
+      let result3Arr = data.result.substring((data.result.indexOf("3.")+3)).split(" | ");
+      let resultArr = [result1Arr, result2Arr, result3Arr];
+      
+      for (let i = 0; i < 3; i++){
+          recBoxes[i]!.title = resultArr[i][0];
+          recBoxes[i]!.creator = resultArr[i][1];
+          recBoxes[i]!.year = resultArr[i][2];
+          recBoxes[i]!.description = resultArr[i][3];
+      }
+        setResultsLoaded(true);
+  
+      async function getImagesOne(){
+        return await axios.post("/api/get-images", {
+            term: recBoxes[0]?.title,
+            genre: selected.name,
+          });
+      }
+      async function getImagesTwo(){
+        return await axios.post("/api/get-images", {
+            term: recBoxes[1]?.title,
+            genre: selected.name,
+          });
+      }
+      async function getImagesThree(){
+        return await axios.post("/api/get-images", {
+            term: recBoxes[2]?.title,
+            genre: selected.name,
+          });
+      }
+  
+      Promise.all([getImagesOne(), getImagesTwo(), getImagesThree()]).then((results) => {
+        // setRecBoxes(prevRecBoxes => ([...prevRecBoxes, 
+        //   recBoxes[0]!.imageSrc : results[0].data, 
+        //   recBoxes[1]!.imageSrc : results[1].data, 
+        //   recBoxes[2]!.imageSrc : results[2].data]));
+        recBoxes[0]!.imageSrc = results[0].data;
+        recBoxes[1]!.imageSrc = results[1].data;
+        recBoxes[2]!.imageSrc = results[2].data;
+      });
   }
 
   return (
     <>
       <Head>
-        <title>Recce: Recommendations4U!</title>
+        <title>Recce</title>
       </Head>
       <div className="min-h-full">
         {/************Navigation Bar*********** */}
@@ -159,7 +184,7 @@ const Home: NextPage = () => {
                       src="/images/RecceLogo.jpg"
                       alt="RecceLogo"
                     />
-                    <p className="pl-2 text-lg text-purple-400">Recce</p>
+                    <p className="pl-2 text-lg text-purple-400">Recce: Recommendations for You!</p>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
                         {navigation.map((item) => (
@@ -318,7 +343,6 @@ const Home: NextPage = () => {
           <div>
             <label className="block pt-3 text-sm font-medium text-gray-700">
               Give me recommendations for {selected.name} like...
-              {recomRefine.recommendation}
               <br></br>(NOTE: Please don't reference anything before June 2021,
               as that is the most recent info that this model uses.)
             </label>
@@ -338,7 +362,7 @@ const Home: NextPage = () => {
           </div>
           <div>
             <label className="block pt-3 text-sm font-medium text-gray-700">
-              (Optional) Describe other requirements: {recomRefine.refinement}
+              (Optional) Describe other requirements:
             </label>
             <div className="relative mt-1 rounded-md shadow-sm">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
