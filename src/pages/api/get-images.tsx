@@ -8,7 +8,6 @@ let config = {
     }
 }
 
-
 // Figure out a way to change the search term based on a state variable in the app.
 
 const getImages = async( req: NextApiRequest, res: NextApiResponse) => {
@@ -19,7 +18,6 @@ const getImages = async( req: NextApiRequest, res: NextApiResponse) => {
     await axios.get(url, config)
     .then((response) => {
         res.send(response.data.value[0].contentUrl);
-        console.log(response.data.value[0].contentUrl);
     });
 }
 

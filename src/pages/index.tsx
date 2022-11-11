@@ -6,13 +6,6 @@ import {signIn, useSession} from "next-auth/react";
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import Head from "next/head";
 import axios from "axios";
-import getImages from "./api/get-images";
-
-// let user = {
-//   name: "Pochi Chao",
-//   email: "19pochi94@gmail.com",
-//   imageUrl: "/images/profilePic.jpeg"
-// }
 
 const navigation = [
   { name: "How to Use", href: "#", current: false },
@@ -22,17 +15,17 @@ const navigation = [
 const mediaTypes = [
   {
     id: 1,
-    name: "Books",
+    name: "Book",
     emoji: "📚",
   },
   {
     id: 2,
-    name: "Movies",
+    name: "Movie",
     emoji: "🎬",
   },
   {
     id: 3,
-    name: "TV Shows",
+    name: "TV Show",
     emoji: "📺",
   },
   {
@@ -42,17 +35,15 @@ const mediaTypes = [
   },
   {
     id: 5,
-    name: "Poems",
+    name: "Poem",
     emoji: "📜",
   },
   {
     id: 6,
-    name: "Games",
+    name: "Game",
     emoji: "🎮",
   },
 ]
-
-
 
 function classNames(...classes: string[]) {
   return classes.filter(item => Boolean(item)).join("")
@@ -61,109 +52,161 @@ function classNames(...classes: string[]) {
 const Home: NextPage = () => {
   const [open, setOpen] = useState(true);
   const {data, status} = useSession();
+  const [selected, setSelected] = useState(mediaTypes[0]!);
   const [recBoxes, setRecBoxes] = useState([
     {
       id: 1,
-      title: '',
-      creator: '',
-      href: '#',
-      imageSrc: '',
+      title: "",
+      creator: "",
+      href: "#",
+      imageSrc: "",
       imageAlt: "Recommendation No.1 Picture",
-      year: '',
-      description: '',
+      year: "",
+      description: "",
     },
     {
       id: 2,
-      title: '',
-      creator: '',
-      href: '#',
-      imageSrc: '',
+      title: "",
+      creator: "",
+      href: "#",
+      imageSrc: "",
       imageAlt: "Recommendation No.2 Picture",
-      year: '',
-      description: '',
+      year: "",
+      description: "",
     },
     {
       id: 3,
-      title: '',
-      creator: '',
-      href: '#',
-      imageSrc: '',
+      title: "",
+      creator: "",
+      href: "#",
+      imageSrc: "",
       imageAlt: "Recommendation No.3 Picture",
-      year: '',
-      description: '',
+      year: "",
+      description: "",
     },
   ]);
-  
-  const [selected, setSelected] = useState(mediaTypes[0]!);
+
   const [recomRefine, setRecomRefine] = useState({
     recommendation: " ",
     refinement: " ",
   });
   const [resultsLoaded, setResultsLoaded] = useState(false);
-  const [imageRecs, setImageRecs] = useState<any>();
 
-
-  function handleChange(event: { target: { name: any; value: any; }; }){
-    const {name, value} = event.target;
-    setRecomRefine((prevValue: {recommendation: any; refinement: any;}) => {
+  function handleChange(event: { target: { name: any; value: any } }) {
+    const { name, value } = event.target;
+    setRecomRefine((prevValue: { recommendation: any; refinement: any }) => {
       return {
         ...prevValue,
-        [name]: value
+        [name]: value,
+      };
+    });
+  }
+  
+  function updateRecBoxes(res: any) {
+    let result1Arr = res.data.result
+      .substring(
+        res.data.result.indexOf("1.") + 3,
+        res.data.result.indexOf("2.")
+      )
+      .split(" | ");
+    let result2Arr = res.data.result
+      .substring(
+        res.data.result.indexOf("2.") + 3,
+        res.data.result.indexOf("3.")
+      )
+      .split(" | ");
+    let result3Arr = res.data.result
+      .substring(res.data.result.indexOf("3.") + 3)
+      .split(" | ");
+    let resultArr = [result1Arr, result2Arr, result3Arr];
+
+    setRecBoxes((prevRecBoxes) => {
+      const newRecBoxes = prevRecBoxes.map((recBox) => {
+        if (recBox.id === 1) {
+          return {
+            ...recBox,
+            title: resultArr[0][0],
+            creator: resultArr[0][1],
+            year: resultArr[0][2],
+            description: resultArr[0][3],
+          };
+        } else if (recBox.id === 2) {
+          return {
+            ...recBox,
+            title: resultArr[1][0],
+            creator: resultArr[1][1],
+            year: resultArr[1][2],
+            description: resultArr[1][3],
+          };
+        } else if (recBox.id === 3) {
+          return {
+            ...recBox,
+            title: resultArr[2][0],
+            creator: resultArr[2][1],
+            year: resultArr[2][2],
+            description: resultArr[2][3],
+          };
+        }
+        return recBox;
+      });
+
+      async function getImagesOne(newRecBoxes: any) {
+        return await axios.post("/api/get-images", {
+          term: newRecBoxes[0]?.title,
+          genre: selected.name,
+        });
       }
-    })
+      async function getImagesTwo(newRecBoxes: any) {
+        return await axios.post("/api/get-images", {
+          term: newRecBoxes[1]?.title,
+          genre: selected.name,
+        });
+      }
+      async function getImagesThree(newRecBoxes: any) {
+        return await axios.post("/api/get-images", {
+          term: newRecBoxes[2]?.title,
+          genre: selected.name,
+        });
+      }
+      
+      Promise.all([
+        getImagesOne(newRecBoxes),
+        getImagesTwo(newRecBoxes),
+        getImagesThree(newRecBoxes),
+      ]).then((results) => {
+          setRecBoxes((prevRecBoxes) => {
+            const newRecBoxes = prevRecBoxes.map((recBox) => {
+              if (recBox.id === 1) {
+                return { ...recBox, imageSrc: results[0].data };
+              } else if (recBox.id === 2) {
+                return { ...recBox, imageSrc: results[1].data };
+              } else if (recBox.id === 3) {
+                return { ...recBox, imageSrc: results[2].data };
+              }
+              return recBox;
+            });
+            return newRecBoxes;
+          });
+        })
+      return newRecBoxes;
+    });
   }
 
-  async function handleClick(event: React.MouseEvent<HTMLElement>){
-      const response = await fetch("/api/generate", {
-        method: "POST",
+  async function handleClick(event: React.MouseEvent<HTMLElement>) {
+    const requestInput = {
+      selected: selected,
+      recomRefine: recomRefine,
+    };
+
+    await axios
+      .post("/api/generate", requestInput, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ selected, recomRefine }),
-      });
-      const data = await response.json();
-      
-      let result1Arr = data.result.substring((data.result.indexOf("1.")+3), (data.result.indexOf("2."))).split(" | ");
-      let result2Arr = data.result.substring((data.result.indexOf("2."))+3,(data.result.indexOf("3."))).split(" | ");
-      let result3Arr = data.result.substring((data.result.indexOf("3.")+3)).split(" | ");
-      let resultArr = [result1Arr, result2Arr, result3Arr];
-      
-      for (let i = 0; i < 3; i++){
-          recBoxes[i]!.title = resultArr[i][0];
-          recBoxes[i]!.creator = resultArr[i][1];
-          recBoxes[i]!.year = resultArr[i][2];
-          recBoxes[i]!.description = resultArr[i][3];
-      }
-        setResultsLoaded(true);
-  
-      async function getImagesOne(){
-        return await axios.post("/api/get-images", {
-            term: recBoxes[0]?.title,
-            genre: selected.name,
-          });
-      }
-      async function getImagesTwo(){
-        return await axios.post("/api/get-images", {
-            term: recBoxes[1]?.title,
-            genre: selected.name,
-          });
-      }
-      async function getImagesThree(){
-        return await axios.post("/api/get-images", {
-            term: recBoxes[2]?.title,
-            genre: selected.name,
-          });
-      }
-  
-      Promise.all([getImagesOne(), getImagesTwo(), getImagesThree()]).then((results) => {
-        // setRecBoxes(prevRecBoxes => ([...prevRecBoxes, 
-        //   recBoxes[0]!.imageSrc : results[0].data, 
-        //   recBoxes[1]!.imageSrc : results[1].data, 
-        //   recBoxes[2]!.imageSrc : results[2].data]));
-        recBoxes[0]!.imageSrc = results[0].data;
-        recBoxes[1]!.imageSrc = results[1].data;
-        recBoxes[2]!.imageSrc = results[2].data;
-      });
+      })
+      .then((res) => updateRecBoxes(res));
+
+    setResultsLoaded(true);
   }
 
   return (
@@ -184,7 +227,9 @@ const Home: NextPage = () => {
                       src="/images/RecceLogo.jpg"
                       alt="RecceLogo"
                     />
-                    <p className="pl-2 text-lg text-purple-400">Recce: Recommendations for You!</p>
+                    <p className="pl-2 text-lg text-purple-400">
+                      Recce: Recommendations for You!
+                    </p>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
                         {navigation.map((item) => (
@@ -342,7 +387,8 @@ const Home: NextPage = () => {
           {/* ***********Give me recommendations for + Optional Refinement User Inputs*********** */}
           <div>
             <label className="block pt-3 text-sm font-medium text-gray-700">
-              Give me recommendations for {selected.name} like...
+              Give me recommendations for {selected.name}
+              {selected.name === "Manga" ? "" : "s"} like...
               <br></br>(NOTE: Please don't reference anything before June 2021,
               as that is the most recent info that this model uses.)
             </label>
@@ -388,9 +434,13 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        <div className={`mx-auto max-w-2xl py-4 px-4 sm:py-18 sm:px-6 lg:max-w-7xl lg:px-8 ${resultsLoaded ? 'visible' : 'invisible'}`}>
+        <div
+          className={`sm:py-18 mx-auto max-w-2xl py-4 px-4 sm:px-6 lg:max-w-7xl lg:px-8 ${
+            resultsLoaded ? "visible" : "invisible"
+          }`}
+        >
           <h2 className="text-center text-2xl font-bold tracking-tight text-gray-900">
-            Recommendations 
+            Recommendations
           </h2>
           <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
             {recBoxes.map((recBox) => (
