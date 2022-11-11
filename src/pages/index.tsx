@@ -103,22 +103,22 @@ const Home: NextPage = () => {
   }
   
   function updateRecBoxes(res: any) {
-    let result1Arr = res.data.result
+    const result1Arr = res.data.result
       .substring(
         res.data.result.indexOf("1.") + 3,
         res.data.result.indexOf("2.")
       )
       .split(" | ");
-    let result2Arr = res.data.result
+    const result2Arr = res.data.result
       .substring(
         res.data.result.indexOf("2.") + 3,
         res.data.result.indexOf("3.")
       )
       .split(" | ");
-    let result3Arr = res.data.result
+    const result3Arr = res.data.result
       .substring(res.data.result.indexOf("3.") + 3)
       .split(" | ");
-    let resultArr = [result1Arr, result2Arr, result3Arr];
+    const resultArr = [result1Arr, result2Arr, result3Arr];
 
     setRecBoxes((prevRecBoxes) => {
       const newRecBoxes = prevRecBoxes.map((recBox) => {
@@ -389,7 +389,7 @@ const Home: NextPage = () => {
             <label className="block pt-3 text-sm font-medium text-gray-700">
               Give me recommendations for {selected.name}
               {selected.name === "Manga" ? "" : "s"} like...
-              <br></br>(NOTE: Please don't reference anything before June 2021,
+              <br></br>(NOTE: Please do not reference anything before June 2021,
               as that is the most recent info that this model uses.)
             </label>
             <div className="relative mt-1 rounded-md shadow-sm">

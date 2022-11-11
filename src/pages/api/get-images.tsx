@@ -2,7 +2,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 
-let config = {
+const config = {
     headers : {
         "Ocp-Apim-Subscription-Key": process.env.BING_API_KEY,
     }
@@ -12,8 +12,8 @@ let config = {
 
 const getImages = async( req: NextApiRequest, res: NextApiResponse) => {
     
-    let term = req.body.term + " " + req.body.genre;
-    let url = "https://api.bing.microsoft.com/v7.0/images/search?q=" + encodeURIComponent(`${term}`) + "&count=1&offset=0";
+    const term = req.body.term + " " + req.body.genre;
+    const url = "https://api.bing.microsoft.com/v7.0/images/search?q=" + encodeURIComponent(`${term}`) + "&count=1&offset=0";
 
     await axios.get(url, config)
     .then((response) => {
