@@ -62,17 +62,17 @@ export default function HowToUseModal({
                           2010, drama, highly-rated) <br></br>
                         </p>
                         <p className="text-sm leading-relaxed">
-                          to OpenAI's general purpose API, GPT-3.
+                          to the OpenAI general purpose API, GPT-3.
                         </p>
                         <p className="pt-2 text-sm leading-relaxed">
                           GPT-3 then generates a list of recommendations based
                           on your inputs, and the list is then displayed on the
-                          page with corresponding images from Bing's Image
+                          page with corresponding images from theBing Image
                           Search API.
                         </p>
                         <p className="pt-2 text-sm leading-relaxed">
                           The search refinement feature is optional, and if you
-                          don't want to use it, just leave the field empty.
+                          do not want to use it, just leave the field empty.
                           However, the more search refinement you provide, the
                           more accurate and tailored your results will be.
                         </p>

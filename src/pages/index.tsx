@@ -2,7 +2,7 @@ import type {NextPage} from "next";
 import {useState} from "react";
 import {Disclosure, Menu, Transition, Listbox} from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
 import Head from "next/head";
 import axios from "axios";
 import HowToUseModal from "../components/HowToUseModal";
