@@ -11,8 +11,8 @@ export default function GiveFeedbackModal({
     setOpen: (value: boolean) => void;
 }) {
     const cancelButtonRef = useRef(null);
-    let [submitClicked, setSubmitClicked] = useState(false);
-    let [feedbackText, setFeedbackText] = useState("");
+    const [submitClicked, setSubmitClicked] = useState(false);
+    const [feedbackText, setFeedbackText] = useState("");
 
     function submitClick(){
       setSubmitClicked(true);
