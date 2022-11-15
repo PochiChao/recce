@@ -1,15 +1,17 @@
 import type {NextPage} from "next";
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import {Disclosure, Menu, Transition, Listbox} from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import {signIn, useSession} from "next-auth/react";
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import Head from "next/head";
 import axios from "axios";
+import HowToUseModal from "../components/HowToUseModal";
+import GiveFeedbackModal from "../components/GiveFeedbackModal";
+import Footer from "../components/Footer"
 
 const navigation = [
-  { name: "How to Use", href: "#", current: false },
-  { name: "Give Feedback", href: "#", current: false },
+  { name: "About / How to Use", current: false },
+  { name: "Give Feedback", current: false },
 ]
 
 const mediaTypes = [
@@ -50,9 +52,9 @@ function classNames(...classes: string[]) {
 }
 
 const Home: NextPage = () => {
-  const [open, setOpen] = useState(true);
-  const {data, status} = useSession();
   const [selected, setSelected] = useState(mediaTypes[0]!);
+  const [open, setOpen] = useState(false);
+  const [openFeedback, setOpenFeedback] = useState(false);
   const [recBoxes, setRecBoxes] = useState([
     {
       id: 1,
@@ -84,6 +86,36 @@ const Home: NextPage = () => {
       year: "",
       description: "",
     },
+    // {
+    //   id: 4,
+    //   title: "",
+    //   creator: "",
+    //   href: "#",
+    //   imageSrc: "",
+    //   imageAlt: "Recommendation No.4 Picture",
+    //   year: "",
+    //   description: "",
+    // },
+    // {
+    //   id: 5,
+    //   title: "",
+    //   creator: "",
+    //   href: "#",
+    //   imageSrc: "",
+    //   imageAlt: "Recommendation No.5 Picture",
+    //   year: "",
+    //   description: "",
+    // },
+    // {
+    //   id: 6,
+    //   title: "",
+    //   creator: "",
+    //   href: "#",
+    //   imageSrc: "",
+    //   imageAlt: "Recommendation No.6 Picture",
+    //   year: "",
+    //   description: "",
+    // },
   ]);
 
   const [recomRefine, setRecomRefine] = useState({
@@ -91,6 +123,14 @@ const Home: NextPage = () => {
     refinement: " ",
   });
   const [resultsLoaded, setResultsLoaded] = useState(false);
+
+  function openHowToUseModal() {
+    setOpen(true);
+  }
+
+  function openGiveFeedbackModal() {
+    setOpenFeedback(true);
+  }
 
   function handleChange(event: { target: { name: any; value: any } }) {
     const { name, value } = event.target;
@@ -211,6 +251,8 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <HowToUseModal open={open} setOpen={setOpen} />
+      <GiveFeedbackModal open={openFeedback} setOpen={setOpenFeedback} />
       <Head>
         <title>Recce</title>
       </Head>
@@ -223,11 +265,11 @@ const Home: NextPage = () => {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <img
-                      className="h-8 w-8"
+                      className="h-8 w-8 rounded-lg"
                       src="/images/RecceLogo.jpg"
                       alt="RecceLogo"
                     />
-                    <p className="pl-2 text-lg text-purple-400">
+                    <p className="flex pl-2 text-lg text-purple-400">
                       Recce: Recommendations for You!
                     </p>
                     <div className="hidden md:block">
@@ -235,14 +277,8 @@ const Home: NextPage = () => {
                         {navigation.map((item) => (
                           <a
                             key={item.name}
-                            href={item.href}
-                            className={classNames(
-                              item.current
-                                ? "text-gray-300 outline outline-offset-1 outline-yellow-400 hover:bg-gray-700 hover:text-white"
-                                : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                              "rounded-md px-3 py-2 text-sm font-medium"
-                            )}
-                            aria-current={item.current ? "page" : undefined}
+                            onClick={item.name=== "About / How to Use" ? openHowToUseModal : openGiveFeedbackModal}
+                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                           >
                             {item.name}
                           </a>
@@ -251,42 +287,6 @@ const Home: NextPage = () => {
                     </div>
                   </div>
 
-                  <div className="ml-6 flex items-center md:ml-6">
-                    <button
-                      type="button"
-                      className={`p-1 text-gray-400 hover:text-white ${
-                        status === "authenticated" ? "hidden" : ""
-                      }`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setOpen(true);
-                      }}
-                    >
-                      Sign Up
-                    </button>
-                    <Menu as="div" className="relative ml-3">
-                      <div>
-                        <Menu.Button className="mr-3 flex max-w-xs items-center rounded-full bg-gray-800 text-sm">
-                          <span className="sr-only">Open user menu</span>
-                          {/* <img
-                            className="h-8 w-8 rounded-full"
-                            src={user.imageUrl}
-                            alt="User Profile Pic"
-                          /> */}
-                        </Menu.Button>
-                      </div>
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 "></Menu.Items>
-                    </Menu>
-                    <button
-                      className="text-gray-300 hover:bg-gray-700 hover:text-white"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        signIn("google");
-                      }}
-                    >
-                      {status === "authenticated" ? "Sign Out" : "Sign In"}
-                    </button>
-                  </div>
                   <div className="-mr-2 flex md:hidden">
                     {/* Mobile menu button */}
                     <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white ">
@@ -389,7 +389,7 @@ const Home: NextPage = () => {
             <label className="block pt-3 text-sm font-medium text-gray-700">
               Give me recommendations for {selected.name}
               {selected.name === "Manga" ? "" : "s"} like...
-              <br></br>(NOTE: Please do not reference anything before June 2021,
+              <br></br>(NOTE: Please do not reference anything after June 2021,
               as that is the most recent info that this model uses.)
             </label>
             <div className="relative mt-1 rounded-md shadow-sm">
@@ -473,8 +473,9 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
-  );
+  )
 }
 
-export default Home;
+export default Home
