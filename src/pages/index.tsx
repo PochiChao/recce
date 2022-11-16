@@ -256,7 +256,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Recce</title>
       </Head>
-      <div className="min-h-full">
+      <div className="min-h-screen flex flex-col">
         {/************Navigation Bar*********** */}
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
@@ -472,10 +472,10 @@ const Home: NextPage = () => {
             ))}
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </>
   )
 }
 
-export default Home
+export default Home;
