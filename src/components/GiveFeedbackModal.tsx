@@ -1,6 +1,7 @@
 import { Fragment, useRef, useState } from "react";
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import axios from "axios";
 
 
 export default function GiveFeedbackModal({
@@ -12,18 +13,40 @@ export default function GiveFeedbackModal({
 }) {
     const cancelButtonRef = useRef(null);
     const [submitClicked, setSubmitClicked] = useState(false);
-    const [feedbackText, setFeedbackText] = useState("");
+    const [feedbackText, setFeedbackText] = useState({
+      person: "",
+      message: "",
+    });
 
     function submitClick(){
       setSubmitClicked(true);
-      
       setTimeout(() => setOpen(false),1000);
       setTimeout(() => setSubmitClicked(false),2000);
+
+      const url = "https://api.emailjs.com/api/v1.0/email/send";
+      const config = {
+        service_id: 'service_vvbgyu8',
+        template_id: 'template_bsszdnt',
+        user_id: 'hBPrKO3PktefWm-h1',
+        accessToken: process.env.EMAILJS_API_KEY,
+        template_params: {
+            'person': feedbackText.person,
+            'message': feedbackText.message
+        }
+      }
+      axios.post(url, config).then((response) => {
+        console.log(response);
+      });
     }
 
-    function handleChange(event: { target: { value: any } }) {
-      const {value} = event.target;
-      setFeedbackText(value);
+    function handleChange(event: { target: { name: any; value: any } }) {
+      const {name, value} = event.target;
+      setFeedbackText((prevValue: { person: string; message: string }) => {
+        return {
+          ...prevValue,
+          [name]: value,
+        };
+      });
     }
     return (
       <Transition.Root show={open} as={Fragment}>
@@ -66,13 +89,21 @@ export default function GiveFeedbackModal({
                         </Dialog.Title>
                         <div className="sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                           <div className="sm:col-span-2 sm:mt-0">
+                            <input
+                              id="person"
+                              name="person"
+                              className="block w-full rounded-md border-1 border-gray-300 px-3 py-2 placeholder-gray-500"
+                              placeholder={"Optional: Your name"}
+                              value={feedbackText.person}
+                              onChange={handleChange}
+                            />
                             <textarea
-                              id="feedback"
-                              name="feedback"
+                              id="message"
+                              name="message"
                               rows={5}
-                              className="shadow-smsm:text-sm block w-full max-w-lg rounded-md border-gray-300"
-                              defaultValue={""}
-                              value={feedbackText}
+                              className="block w-full rounded-md border-1 border-gray-300 shadow-sm sm:text-sm placeholder-gray-500"
+                              placeholder={"Enter your feedback here"}
+                              value={feedbackText.message}
                               onChange={handleChange}
                             />
                             <p className="mt-2 text-sm text-gray-500">

@@ -21,4 +21,4 @@ const getImages = async( req: NextApiRequest, res: NextApiResponse) => {
     });
 }
 
-export default getImages;   
+export default getImages;  
