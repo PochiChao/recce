@@ -1,6 +1,7 @@
+import {Fragment} from "react";
 import type {NextPage} from "next";
 import {useState} from "react";
-import {Disclosure, Menu, Transition, Listbox} from "@headlessui/react";
+import {Popover, Disclosure, Menu, Transition, Listbox} from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
 import Head from "next/head";
@@ -85,37 +86,7 @@ const Home: NextPage = () => {
       imageAlt: "Recommendation No.3 Picture",
       year: "",
       description: "",
-    },
-    // {
-    //   id: 4,
-    //   title: "",
-    //   creator: "",
-    //   href: "#",
-    //   imageSrc: "",
-    //   imageAlt: "Recommendation No.4 Picture",
-    //   year: "",
-    //   description: "",
-    // },
-    // {
-    //   id: 5,
-    //   title: "",
-    //   creator: "",
-    //   href: "#",
-    //   imageSrc: "",
-    //   imageAlt: "Recommendation No.5 Picture",
-    //   year: "",
-    //   description: "",
-    // },
-    // {
-    //   id: 6,
-    //   title: "",
-    //   creator: "",
-    //   href: "#",
-    //   imageSrc: "",
-    //   imageAlt: "Recommendation No.6 Picture",
-    //   year: "",
-    //   description: "",
-    // },
+    }
   ]);
 
   const [recomRefine, setRecomRefine] = useState({
@@ -256,7 +227,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Recce</title>
       </Head>
-      <div className="min-h-screen flex flex-col">
+      <div className="flex min-h-screen flex-col">
         {/************Navigation Bar*********** */}
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
@@ -277,8 +248,12 @@ const Home: NextPage = () => {
                         {navigation.map((item) => (
                           <a
                             key={item.name}
-                            onClick={item.name=== "About / How to Use" ? openHowToUseModal : openGiveFeedbackModal}
-                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                            onClick={
+                              item.name === "About / How to Use"
+                                ? openHowToUseModal
+                                : openGiveFeedbackModal
+                            }
+                            className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                           >
                             {item.name}
                           </a>
@@ -306,6 +281,23 @@ const Home: NextPage = () => {
                   </div>
                 </div>
               </div>
+              <Disclosure.Panel className="sm:hidden">
+                <div className="space-y-1 px-2 pt-2 pb-3">
+                {navigation.map((item) => (
+                          <Disclosure.Button
+                            key={item.name}
+                            onClick={
+                              item.name === "About / How to Use"
+                                ? openHowToUseModal
+                                : openGiveFeedbackModal
+                            }
+                            className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                          >
+                            {item.name}
+                          </Disclosure.Button>
+                        ))}
+                </div>
+              </Disclosure.Panel>
             </>
           )}
         </Disclosure>
@@ -384,7 +376,6 @@ const Home: NextPage = () => {
             )}
           </Listbox>
 
-          {/* ***********Give me recommendations for + Optional Refinement User Inputs*********** */}
           <div>
             <label className="block pt-3 text-sm font-medium text-gray-700">
               Give me recommendations for {selected.name}
@@ -427,7 +418,7 @@ const Home: NextPage = () => {
           <div className="items-center justify-center pt-3">
             <button
               onClick={handleClick}
-              className="md:text-md flex w-1/4 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-3 py-1 text-base font-medium text-white hover:bg-indigo-600 md:py-3 md:px-6"
+              className="md:text-md flex w-1/4 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-3 py-1 text-base font-medium text-white hover:bg-indigo-600 md:py-5 md:px-8"
             >
               Execute Recce!
             </button>
@@ -475,7 +466,7 @@ const Home: NextPage = () => {
         <Footer />
       </div>
     </>
-  )
+  );
 }
 
 export default Home;
