@@ -43,7 +43,7 @@ export default function HowToUseModal({
                       <div className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center text-3xl sm:mx-0 sm:h-10 sm:w-10">
                         ℹ️
                       </div>
-                      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <div className="mt-3 text-left sm:mt-0 sm:ml-4 sm:text-left">
                         <Dialog.Title
                           as="h3"
                           className="pb-3 text-2xl font-medium leading-6 text-gray-900"
