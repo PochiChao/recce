@@ -418,7 +418,7 @@ const Home: NextPage = () => {
           <div className="items-center justify-center pt-3">
             <button
               onClick={handleClick}
-              className="md:text-md flex w-1/4 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-5 py-3 text-base font-medium text-white hover:bg-indigo-600 md:py-3 md:px-5"
+              className="md:text-md flex w-1/3 md:w-1/4 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-5 py-3 text-base font-medium text-white hover:bg-indigo-600 md:py-3 md:px-5"
             >
               Execute Recce!
             </button>
