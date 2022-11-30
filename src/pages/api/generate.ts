@@ -8,7 +8,7 @@ const openai = new OpenAIApi(configuration);
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const completion = await openai.createCompletion({
-    model: "text-davinci-002",
+    model: "text-davinci-003",
     prompt: generatePrompt(req.body.selected, req.body.recomRefine),
     temperature: 0.4,
     max_tokens: 200,
@@ -30,7 +30,7 @@ function generatePrompt(
 ) {
   return `Provide 3 recommendations for ${selected.name} like ${
     recomRefine.recommendation
-  }. Provide a brief description (3-4 sentences) of each recommendation without restating the title and author.
+  }. Provide a brief description (1-3 sentences) of each recommendation without restating the title and author.
   The recommendations cannot include ${recomRefine.recommendation} but must be similar to ${recomRefine.recommendation} and 
   MUST BE ${selected.name}s 
   (e.g. if ${recomRefine.recommendation} is a book, the recommendations must be books).
@@ -125,6 +125,6 @@ REFERENCE: ${recomRefine.recommendation}
 SEARCH REFINEMENT: ${recomRefine.refinement}
 ###### END OF INPUT ###### 
 
-###### START OF OUTPUT ######
+
 `;
 }
