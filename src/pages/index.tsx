@@ -112,7 +112,7 @@ const Home: NextPage = () => {
       };
     });
   }
-  
+    
   function updateRecBoxes(res: any) {
     const result1Arr = res.data.result
       .substring(
@@ -130,7 +130,6 @@ const Home: NextPage = () => {
       .substring(res.data.result.indexOf("3.") + 3)
       .split(" | ");
     const resultArr = [result1Arr, result2Arr, result3Arr];
-
     setRecBoxes((prevRecBoxes) => {
       const newRecBoxes = prevRecBoxes.map((recBox) => {
         if (recBox.id === 1) {

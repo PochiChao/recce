@@ -67,7 +67,7 @@ export default function HowToUseModal({
                         <p className="pt-2 text-sm leading-relaxed">
                           GPT-3 then generates a list of recommendations based
                           on your inputs, and the list is then displayed on the
-                          page with corresponding images from theBing Image
+                          page with corresponding images from the Bing Image
                           Search API.
                         </p>
                         <p className="pt-2 text-sm leading-relaxed">
