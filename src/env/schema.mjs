@@ -18,10 +18,10 @@ export const serverSchema = z.object({
   ),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  OPENAI_API_KEY: z.string(),
-  BING_API_KEY: z.string(),
-  EMAILJS_API_KEY: z.string(),
-  TRAINING_DATA: z.string(),
+  // OPENAI_API_KEY: z.string(),
+  // BING_API_KEY: z.string(),
+  // EMAILJS_API_KEY: z.string(),
+  // TRAINING_DATA: z.string(),
 });
 
 /**
