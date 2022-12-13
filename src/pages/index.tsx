@@ -261,7 +261,7 @@ const Home: NextPage = () => {
                     </div>
                   </div>
 
-                  <div className="-mr-2 flex md:hidden">
+                  <div className="mr-2 flex md:hidden">
                     {/* Mobile menu button */}
                     <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white ">
                       <span className="sr-only">Open main menu</span>
@@ -280,7 +280,7 @@ const Home: NextPage = () => {
                   </div>
                 </div>
               </div>
-              <Disclosure.Panel className="sm:hidden">
+              <Disclosure.Panel className="md:hidden">
                 <div className="space-y-1 px-2 pt-2 pb-3">
                 {navigation.map((item) => (
                           <Disclosure.Button
