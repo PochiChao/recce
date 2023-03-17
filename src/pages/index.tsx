@@ -1,19 +1,25 @@
-import {Fragment} from "react";
-import type {NextPage} from "next";
-import {useState} from "react";
-import {Popover, Disclosure, Menu, Transition, Listbox} from "@headlessui/react";
+import { Fragment } from "react";
+import type { NextPage } from "next";
+import { useState } from "react";
+import {
+  Popover,
+  Disclosure,
+  Menu,
+  Transition,
+  Listbox,
+} from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import Head from "next/head";
 import axios from "axios";
 import HowToUseModal from "../components/HowToUseModal";
 import GiveFeedbackModal from "../components/GiveFeedbackModal";
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
 
 const navigation = [
   { name: "About / How to Use", current: false },
   { name: "Give Feedback", current: false },
-]
+];
 
 const mediaTypes = [
   {
@@ -46,10 +52,10 @@ const mediaTypes = [
     name: "Game",
     emoji: "🎮",
   },
-]
+];
 
 function classNames(...classes: string[]) {
-  return classes.filter(item => Boolean(item)).join("")
+  return classes.filter((item) => Boolean(item)).join("");
 }
 
 const Home: NextPage = () => {
@@ -86,7 +92,7 @@ const Home: NextPage = () => {
       imageAlt: "Recommendation No.3 Picture",
       year: "",
       description: "",
-    }
+    },
   ]);
 
   const [recomRefine, setRecomRefine] = useState({
@@ -112,7 +118,7 @@ const Home: NextPage = () => {
       };
     });
   }
-    
+
   function updateRecBoxes(res: any) {
     const result1Arr = res.data.result
       .substring(
@@ -178,26 +184,26 @@ const Home: NextPage = () => {
           genre: selected.name,
         });
       }
-      
+
       Promise.all([
         getImagesOne(newRecBoxes),
         getImagesTwo(newRecBoxes),
         getImagesThree(newRecBoxes),
       ]).then((results) => {
-          setRecBoxes((prevRecBoxes) => {
-            const newRecBoxes = prevRecBoxes.map((recBox) => {
-              if (recBox.id === 1) {
-                return { ...recBox, imageSrc: results[0].data };
-              } else if (recBox.id === 2) {
-                return { ...recBox, imageSrc: results[1].data };
-              } else if (recBox.id === 3) {
-                return { ...recBox, imageSrc: results[2].data };
-              }
-              return recBox;
-            });
-            return newRecBoxes;
+        setRecBoxes((prevRecBoxes) => {
+          const newRecBoxes = prevRecBoxes.map((recBox) => {
+            if (recBox.id === 1) {
+              return { ...recBox, imageSrc: results[0].data };
+            } else if (recBox.id === 2) {
+              return { ...recBox, imageSrc: results[1].data };
+            } else if (recBox.id === 3) {
+              return { ...recBox, imageSrc: results[2].data };
+            }
+            return recBox;
           });
-        })
+          return newRecBoxes;
+        });
+      });
       return newRecBoxes;
     });
   }
@@ -282,19 +288,19 @@ const Home: NextPage = () => {
               </div>
               <Disclosure.Panel className="md:hidden">
                 <div className="space-y-1 px-2 pt-2 pb-3">
-                {navigation.map((item) => (
-                          <Disclosure.Button
-                            key={item.name}
-                            onClick={
-                              item.name === "About / How to Use"
-                                ? openHowToUseModal
-                                : openGiveFeedbackModal
-                            }
-                            className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                          >
-                            {item.name}
-                          </Disclosure.Button>
-                        ))}
+                  {navigation.map((item) => (
+                    <Disclosure.Button
+                      key={item.name}
+                      onClick={
+                        item.name === "About / How to Use"
+                          ? openHowToUseModal
+                          : openGiveFeedbackModal
+                      }
+                      className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    >
+                      {item.name}
+                    </Disclosure.Button>
+                  ))}
                 </div>
               </Disclosure.Panel>
             </>
@@ -417,7 +423,7 @@ const Home: NextPage = () => {
           <div className="items-center justify-center pt-3">
             <button
               onClick={handleClick}
-              className="md:text-md flex w-1/3 md:w-1/4 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-5 py-3 text-base font-medium text-white hover:bg-indigo-600 md:py-3 md:px-5"
+              className="md:text-md flex w-1/3 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-5 py-3 text-base font-medium text-white hover:bg-indigo-600 md:w-1/4 md:py-3 md:px-5"
             >
               Execute Recce!
             </button>
@@ -466,6 +472,6 @@ const Home: NextPage = () => {
       </div>
     </>
   );
-}
+};
 
 export default Home;

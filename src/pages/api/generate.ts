@@ -6,17 +6,22 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-  const completion = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: generatePrompt(req.body.selected, req.body.recomRefine),
-    temperature: 0.4,
-    max_tokens: 200,
-    n: 1,
+  const completion = await openai.createChatCompletion({
+    model: "gpt-4",
+    messages: [
+      {
+        role: "assistant",
+        content: generatePrompt(req.body.selected, req.body.recomRefine),
+      },
+    ],
+    temperature: 0.8,
+    max_tokens: 300,
   });
   // console.log(completion.config.data);
-  res.status(200).json({ result: completion.data.choices![0]!.text });
+  res
+    .status(200)
+    .json({ result: completion.data.choices![0]!.message!.content });
 }
 
 function generatePrompt(
@@ -30,10 +35,16 @@ function generatePrompt(
     refinement: string;
   }
 ) {
-  return `Provide 3 recommendations for ${selected.name} like ${recomRefine.recommendation}. 
+  return `Provide 3 recommendations for ${selected.name} like ${
+    recomRefine.recommendation
+  }. 
   Provide a brief description (1-3 sentences) of each recommendation. The recommendations 
-  cannot include ${recomRefine.recommendation} but must be similar to ${recomRefine.recommendation} and 
-  MUST BE ${selected.name}s (e.g. if ${recomRefine.recommendation} is a book, the recommendations must be books).
+  cannot include ${recomRefine.recommendation} but must be similar to ${
+    recomRefine.recommendation
+  } and 
+  MUST BE ${selected.name}s (e.g. if ${
+    recomRefine.recommendation
+  } is a book, the recommendations must be books).
   The recommendations should meet the following requirements: ${
     recomRefine.refinement !== ""
       ? recomRefine.refinement
@@ -125,5 +136,5 @@ REFERENCE: ${recomRefine.recommendation}
 SEARCH REFINEMENT: ${recomRefine.refinement}
 ###### END OF INPUT ###### 
 
-`
+`;
 }
