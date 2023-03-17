@@ -208,17 +208,15 @@ const Home: NextPage = () => {
       recomRefine: recomRefine,
     };
     setExecuteClicked(true);
-    await axios
-      .post("/api/generate", requestInput, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        timeout: 20000,
-      })
-      .then((res) => {
-        updateRecBoxes(res);
-        setExecuteClicked(false);
-      });
+    await axios({
+      method: "post",
+      url: "/api/generate",
+      headers: { "Content-Type": "application/json" },
+      timeout: 20000,
+    }).then((res) => {
+      updateRecBoxes(res);
+      setExecuteClicked(false);
+    });
 
     setResultsLoaded(true);
   }
