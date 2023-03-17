@@ -429,11 +429,11 @@ const Home: NextPage = () => {
               onClick={handleClick}
               className={`${
                 executeClicked
-                  ? "md:text-md flex w-1/3 items-center justify-center rounded-md border border-transparent bg-green-400 px-5 py-3 text-base font-medium text-white md:w-1/4 md:py-3 md:px-5"
+                  ? "md:text-md flex w-1/3 items-center justify-center rounded-md border border-transparent bg-yellow-400 px-5 py-3 text-base font-medium text-white md:w-1/4 md:py-3 md:px-5"
                   : "md:text-md flex w-1/3 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-5 py-3 text-base font-medium text-white hover:bg-indigo-600 md:w-1/4 md:py-3 md:px-5"
               }`}
             >
-              {executeClicked ? "Executing, may take 5-10s" : "Execute Recce!"}
+              {executeClicked ? "Executing, may take 5-15s" : "Execute Recce!"}
             </button>
           </div>
         </div>
