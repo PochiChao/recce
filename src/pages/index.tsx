@@ -1,14 +1,7 @@
-import { Fragment } from "react";
 import type { NextPage } from "next";
 import { useState } from "react";
-import {
-  Popover,
-  Disclosure,
-  Menu,
-  Transition,
-  Listbox,
-} from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Disclosure, Listbox } from "@headlessui/react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import Head from "next/head";
 import axios from "axios";
@@ -220,6 +213,7 @@ const Home: NextPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        timeout: 20000,
       })
       .then((res) => {
         updateRecBoxes(res);
@@ -433,7 +427,7 @@ const Home: NextPage = () => {
                   : "md:text-md flex w-1/3 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-5 py-3 text-base font-medium text-white hover:bg-indigo-600 md:w-1/4 md:py-3 md:px-5"
               }`}
             >
-              {executeClicked ? "Executing, may take 5-15s" : "Execute Recce!"}
+              {executeClicked ? "Executing, may take 10-20s" : "Execute Recce!"}
             </button>
           </div>
         </div>
