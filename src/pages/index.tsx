@@ -61,6 +61,7 @@ function classNames(...classes: string[]) {
 const Home: NextPage = () => {
   const [selected, setSelected] = useState(mediaTypes[0]!);
   const [open, setOpen] = useState(false);
+  const [executeClicked, setExecuteClicked] = useState(false);
   const [openFeedback, setOpenFeedback] = useState(false);
   const [recBoxes, setRecBoxes] = useState([
     {
@@ -213,14 +214,17 @@ const Home: NextPage = () => {
       selected: selected,
       recomRefine: recomRefine,
     };
-
+    setExecuteClicked(true);
     await axios
       .post("/api/generate", requestInput, {
         headers: {
           "Content-Type": "application/json",
         },
       })
-      .then((res) => updateRecBoxes(res));
+      .then((res) => {
+        updateRecBoxes(res);
+        setExecuteClicked(false);
+      });
 
     setResultsLoaded(true);
   }
@@ -423,9 +427,13 @@ const Home: NextPage = () => {
           <div className="items-center justify-center pt-3">
             <button
               onClick={handleClick}
-              className="md:text-md flex w-1/3 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-5 py-3 text-base font-medium text-white hover:bg-indigo-600 md:w-1/4 md:py-3 md:px-5"
+              className={`${
+                executeClicked
+                  ? "md:text-md flex w-1/3 items-center justify-center rounded-md border border-transparent bg-green-400 px-5 py-3 text-base font-medium text-white md:w-1/4 md:py-3 md:px-5"
+                  : "md:text-md flex w-1/3 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-5 py-3 text-base font-medium text-white hover:bg-indigo-600 md:w-1/4 md:py-3 md:px-5"
+              }`}
             >
-              Execute Recce!
+              {executeClicked ? "Executing, may take 5-10s" : "Execute Recce!"}
             </button>
           </div>
         </div>
