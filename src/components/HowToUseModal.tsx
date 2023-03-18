@@ -62,13 +62,13 @@ export default function HowToUseModal({
                         2010, drama, highly-rated) <br></br>
                       </p>
                       <p className="text-sm leading-relaxed">
-                        to the latest OpenAI general purpose API, GPT-4.
+                        to the OpenAI general purpose API, GPT-3.5-turbo.
                       </p>
                       <p className="pt-2 text-sm leading-relaxed">
-                        GPT-4 then generates a list of recommendations based on
-                        your inputs, and the list is then displayed on the page
-                        with corresponding images from the Bing Image Search
-                        API.
+                        GPT-3.5-turbo then generates a list of recommendations
+                        based on your inputs, and the list is then displayed on
+                        the page with corresponding images from the Bing Image
+                        Search API.
                       </p>
                       <p className="pt-2 text-sm leading-relaxed">
                         The search refinement feature is optional, and if you do
