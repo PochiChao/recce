@@ -208,15 +208,16 @@ const Home: NextPage = () => {
       recomRefine: recomRefine,
     };
     setExecuteClicked(true);
-    await axios({
-      method: "post",
-      url: "/api/generate",
-      headers: { "Content-Type": "application/json" },
-      timeout: 20000,
-    }).then((res) => {
-      updateRecBoxes(res);
-      setExecuteClicked(false);
-    });
+    await axios
+      .post("/api/generate", requestInput, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        updateRecBoxes(res);
+        setExecuteClicked(false);
+      });
 
     setResultsLoaded(true);
   }
@@ -425,7 +426,7 @@ const Home: NextPage = () => {
                   : "md:text-md flex w-1/3 items-center justify-center rounded-md border border-transparent bg-indigo-400 px-5 py-3 text-base font-medium text-white hover:bg-indigo-600 md:w-1/4 md:py-3 md:px-5"
               }`}
             >
-              {executeClicked ? "Executing, may take 10-20s" : "Execute Recce!"}
+              {executeClicked ? "Executing, may take 10-15s" : "Execute Recce!"}
             </button>
           </div>
         </div>

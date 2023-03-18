@@ -8,7 +8,7 @@ const openai = new OpenAIApi(configuration);
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const completion = await openai.createChatCompletion({
-    model: "gpt-4",
+    model: "gpt-3.5-turbo",
     messages: [
       {
         role: "assistant",
